@@ -1,0 +1,67 @@
+.empname{
+    color:yellow;
+}
+
+.cardcolor{
+    background-color: rgb(223, 240, 245);
+    border:2px solid #a1a1a1;
+     width:80%; 
+    background: url('../images/NetwovenLogo.jpg') no-repeat;
+ 
+}
+
+.app table,tr{
+    border: 1px solid grey;
+}
+
+.trees {
+    bottom: 0;
+    height: 110px;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
+
+.CardContainer{
+    height: 80%;
+    border-right: 2px solid black;
+    overflow: auto;
+}
+
+.trees__tree {    
+    background: url('../images/Netwovenlogo.jpg') no-repeat;
+    background-size: 30px; /** moved this property down */
+    float: left;
+    height: 50px;
+    width: 30px;
+}
+
+.textcenter{
+    text-align: center;
+    padding-left: 10%;
+}
+
+.cd-popup {
+    /* opacity: 0; */
+    /* visibility: hidden; */
+    transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  }
+   
+  .cd-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s 0s, visibility 0s 0s;
+  }
+   
+  .cd-popup-container {
+    transform: translateY(-40px);
+    transition-property: transform;
+    transition-duration: 0.3s;
+    background-color:darkkhaki;
+    
+  }
+   
+  .is-visible .cd-popup-container {
+    transform: translateY(0);
+  }
