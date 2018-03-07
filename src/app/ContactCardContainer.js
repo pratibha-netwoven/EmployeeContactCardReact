@@ -127,8 +127,7 @@ export class ContactCardContainer extends React.Component {
   }
 
   updateEmployeeforDumbVersion = () => {
-    console.log("updateEmployeeforDumbVersion");
-    console.log(this.state);
+  
     let currIndex = this.state.employeeArr.findIndex(x => x.ID == this.state.currentEmpID);
 
     if (currIndex < 0) {
@@ -149,9 +148,6 @@ export class ContactCardContainer extends React.Component {
       this.callUpdateEmployeeAPI(this.state.updateEmployeeData);
       this.state.employeeArr.splice(currIndex, 1, this.state.updateEmployeeData);
     }
-
-
-    
 
     this.setState({
       employeeArr: this.state.employeeArr,
@@ -201,7 +197,7 @@ export class ContactCardContainer extends React.Component {
     //   deleteEmpID: -1,
     //   showDeleteConfirmation:false
     // });
-console.log(this.state.deleteEmpID);
+
     this.callDeleteEmployeeAPI(this.state.deleteEmpID);
   
   }
