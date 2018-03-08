@@ -3,15 +3,13 @@ import { render } from 'react-dom';
 import { EmployeeCard } from './EmpCard';
 import { AddEditEmployee } from './AddEditEmployee';
 import { AddEditEmployeeSmart } from './AddEditEmployeeS';
-import { fail } from 'assert';
+// import { fail } from 'assert';
 import axios from "axios";
 
 
 export class ContactCardContainer extends React.Component {
   constructor() {
     super();
-    //this.employeeArr = [];
-
     this.state = {
       currentEmpID: 0,
       isHidden: true,
@@ -19,17 +17,21 @@ export class ContactCardContainer extends React.Component {
       updateEmployeeData: { ID: 0, who: "", phone: "", pic: "upload.jpg", designation: "", bloodgrp: "" },
       showDeleteConfirmation: false,
       deleteEmpID: -1,
-      axiosinstance : axios.create({
-        baseURL: 'http://localhost:60855/api/',
-        headers: {'Content-Type': 'application/json'}
-      })
+      // axiosinstance: axios.create({
+      //   baseURL: 'http://localhost:60855/api/',
+      //   headers: { 'Content-Type': 'application/json' }
+      // })
     }
+    this.axiosinstance = axios.create({
+      baseURL: 'http://localhost:60855/api/',
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 
-  componentDidMount(){
+  componentDidMount() {
     console.log("componentDidMount");
     this.callGetEmployeeAPI();
-   
+
   }
 
   componentWillMount() {
@@ -127,32 +129,32 @@ export class ContactCardContainer extends React.Component {
   }
 
   updateEmployeeforDumbVersion = () => {
-  
+
     let currIndex = this.state.employeeArr.findIndex(x => x.ID == this.state.currentEmpID);
 
     if (currIndex < 0) {
       //add employee
       console.log("add employee");
       var array = this.state.employeeArr;
-      var maxIndex = Math.max.apply(Math, array.map(function (o) { return o.ID; }))
+      var maxIndex = Math.max.apply(Math, array.map( (o) => { return o.ID; }))
       console.log(maxIndex);
       this.state.updateEmployeeData.ID = maxIndex + 1;
-      this.state.currentEmpID =  maxIndex + 1;
+      this.state.currentEmpID = maxIndex + 1;
       this.state.employeeArr.push(this.state.updateEmployeeData);
-      
-      var addEmpData =  this.state.updateEmployeeData;
+
+      var addEmpData = this.state.updateEmployeeData;
       this.callAddEmployeeAPI(addEmpData);
-     
+
     }
     else {
       this.callUpdateEmployeeAPI(this.state.updateEmployeeData);
-      this.state.employeeArr.splice(currIndex, 1, this.state.updateEmployeeData);
+     // this.state.employeeArr.splice(currIndex, 1, this.state.updateEmployeeData);
     }
 
     this.setState({
       employeeArr: this.state.employeeArr,
       updateEmployeeData: this.state.updateEmployeeData,
-      isHidden:true
+      isHidden: true
     })
     //this.setState - aemparr
   }
@@ -184,6 +186,7 @@ export class ContactCardContainer extends React.Component {
 
   deleteEmployee = () => {
     console.log("deleteEmployee");
+    this.callDeleteEmployeeAPI(this.state.deleteEmpID);
     // var index = this.state.employeeArr.map(function (item) { return item.ID; })
     //   .indexOf(this.state.deleteEmpID);
     // console.log(index);
@@ -197,12 +200,9 @@ export class ContactCardContainer extends React.Component {
     //   deleteEmpID: -1,
     //   showDeleteConfirmation:false
     // });
-
-    this.callDeleteEmployeeAPI(this.state.deleteEmpID);
-  
   }
 
-  
+
 
   hideAddEditComponent = (data, e) => {
     if (data.cancel == "y") {
@@ -218,98 +218,97 @@ export class ContactCardContainer extends React.Component {
   handleChangefromDumbCompTextBox = (data, event) => {
     if (this.state.currentEmpID == 0) {
       let currIndex = this.state.employeeArr.findIndex(x => x.ID == this.state.currentEmpID);
-      
-      if(currIndex <0)
-      {
+
+      if (currIndex < 0) {
         var array = this.state.employeeArr;
         var maxIndex = Math.max.apply(Math, array.map(function (o) { return o.ID; }))
         this.setState({
-          updateEmployeeData:  {  ... this.state.updateEmployeeData, ID: maxIndex + 1 }
+          updateEmployeeData: { ... this.state.updateEmployeeData, ID: maxIndex + 1 }
         });
       }
     }
 
-      switch (data.col) {
-        case "name":
-          this.setState({
-            updateEmployeeData:  {  ... this.state.updateEmployeeData, who: event.target.value }
-          });
-          break;
-        case "phone":
-          this.setState({
-            updateEmployeeData:  {  ... this.state.updateEmployeeData, phone: event.target.value }
-          });
-          break;
-        case "pic":
-          this.setState({
-            updateEmployeeData:  {  ... this.state.updateEmployeeData, pic: event.target.value }
-          });
-          break;
-        case "designation":
-          this.setState({
-            updateEmployeeData:  {  ... this.state.updateEmployeeData, designation: event.target.value }
-          });
-          break;
-        case "bloodgrp":
-          this.setState({
-            updateEmployeeData:  {  ... this.state.updateEmployeeData, bloodgrp: event.target.value }
-          });
-          break;
-      }
+    switch (data.col) {
+      case "name":
+        this.setState({
+          updateEmployeeData: { ... this.state.updateEmployeeData, who: event.target.value }
+        });
+        break;
+      case "phone":
+        this.setState({
+          updateEmployeeData: { ... this.state.updateEmployeeData, phone: event.target.value }
+        });
+        break;
+      case "pic":
+        this.setState({
+          updateEmployeeData: { ... this.state.updateEmployeeData, pic: event.target.value }
+        });
+        break;
+      case "designation":
+        this.setState({
+          updateEmployeeData: { ... this.state.updateEmployeeData, designation: event.target.value }
+        });
+        break;
+      case "bloodgrp":
+        this.setState({
+          updateEmployeeData: { ... this.state.updateEmployeeData, bloodgrp: event.target.value }
+        });
+        break;
+    }
   }
 
-  callAddEmployeeAPI =(addEmpData)=>{
+  callAddEmployeeAPI = (addEmpData) => {
     console.log(addEmpData);
-    addEmpData.ID=0;
-    this.state.axiosinstance.post('employee', addEmpData)
-    .then((response) =>{
-     this.callGetEmployeeAPI(); //refresh the values
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-
-  callUpdateEmployeeAPI =(updateEmpData)=>{
- 
-    this.state.axiosinstance.put('employee', updateEmpData)
-    .then((response) =>{
-     this.callGetEmployeeAPI(); //refresh the values
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-
-  callGetEmployeeAPI =()=>{
-    console.log("callGetEmployeeAPI");
-    this.state.axiosinstance.get('employee/getemployees')
-    .then((response) => {
-      this.setState({
-        employeeArr : response.data
+    addEmpData.ID = 0;
+    this.axiosinstance.post('employee', addEmpData)
+      .then((response) => {
+        this.callGetEmployeeAPI(); //refresh the values
+      })
+      .catch(function (error) {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   }
 
-  callDeleteEmployeeAPI =(EmpID)=>{
-   
-    this.state.axiosinstance.delete('employee/'+EmpID)
-    .then((response) => {
-      
-      this.setState({
-      isHidden: true,
-      deleteEmpID: -1,
-      showDeleteConfirmation:false
-    });
-      //fill employeearray with fresh values
-    this.callGetEmployeeAPI();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  callUpdateEmployeeAPI = (updateEmpData) => {
+
+    this.axiosinstance.put('employee', updateEmpData)
+      .then((response) => {
+        this.callGetEmployeeAPI(); //refresh the values
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  callGetEmployeeAPI = () => {
+    console.log('callGetEmployeeAPI');
+    this.axiosinstance.get('employee/getemployees')
+      .then((response) => {
+        this.setState({
+          employeeArr: response.data
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  callDeleteEmployeeAPI = (EmpID) => {
+
+    this.axiosinstance.delete('employee/' + EmpID)
+      .then((response) => {
+
+        this.setState({
+          isHidden: true,
+          deleteEmpID: -1,
+          showDeleteConfirmation: false
+        });
+        //fill employeearray with fresh values
+        this.callGetEmployeeAPI();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   render() {
